@@ -14,7 +14,10 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@green-intelligence/auth": ["apps/auth/"],
+      "@green-intelligence/ui": ["apps/ui/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

@@ -4,16 +4,17 @@ import react from '@vitejs/plugin-react-swc';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 
 export default defineConfig({
+  base: '/auth',
   root: __dirname,
   cacheDir: '../../node_modules/.vite/apps/auth',
 
   server: {
-    port: 4200,
+    port: 5200,
     host: 'localhost',
   },
 
   preview: {
-    port: 4300,
+    port: 5300,
     host: 'localhost',
   },
 

@@ -1,0 +1,7 @@
+services:
+  nginx:
+    image: nginx:latest
+    restart: always
+    network_mode: host
+    volumes:
+      - /var/lib/nginx/conf.d:/etc/nginx/conf.d

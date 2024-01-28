@@ -2,7 +2,7 @@ import AuthPage from './Page';
 
 export default function AuthLayout() {
   return (
-    <div className="flex grow justify-center items-center">
+    <div className="flex grow">
       <AuthPage />
     </div>
   );
