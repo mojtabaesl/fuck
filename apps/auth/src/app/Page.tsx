@@ -8,7 +8,7 @@ import Cookies from 'js-cookie';
 
 const loginFormSchema = z.object({
   username: z.string().trim().min(1, { message: 'username is required' }),
-  password: z.string().trim().min(1, { message: 'username is required' }),
+  password: z.string().trim().min(1, { message: 'password is required' }),
 });
 
 type LoginForm = z.infer<typeof loginFormSchema>;

@@ -1,15 +1,19 @@
 'use client';
 
 import { fetchEventSource } from '@microsoft/fetch-event-source';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Markdown from 'react-markdown';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { oneLight } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 
 interface ExtensionProps {
   ticket?: string;
 }
 
 export const Extension = ({ ticket }: ExtensionProps) => {
-  const [data, setData] = useState<string[]>([]);
+  const [data, setData] = useState<string>('');
+  const headRef = useRef(false);
+  const langRef = useRef(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,9 +37,30 @@ export const Extension = ({ ticket }: ExtensionProps) => {
           }
         },
         onmessage(event) {
-          console.log(event.data);
           const parsedData = JSON.parse(event.data);
-          setData((data) => [...data, parsedData.content]);
+          let content = parsedData.content;
+
+          if (headRef.current && !langRef.current) {
+            content = content + '\n';
+            langRef.current = content;
+          }
+          if (content.includes('```')) {
+            if (!headRef.current) {
+              content = content.replace(
+                /(.*)```(.*)/,
+                (_: unknown, b: string, c: string) => `${b}\n\n\`\`\`${c}`
+              );
+              headRef.current = true;
+            } else {
+              content = content.replace(
+                /(.*)```(.*)/,
+                (_: unknown, b: string, c: string) => `${b}\n\n\`\`\`\n\n${c}`
+              );
+              headRef.current = false;
+            }
+          }
+
+          setData((data) => data + content);
         },
         onclose() {
           console.log('Connection closed by the server');
@@ -49,7 +74,27 @@ export const Extension = ({ ticket }: ExtensionProps) => {
   }, [ticket]);
   return (
     <div>
-      <Markdown>{data.join('')}</Markdown>
+      <Markdown
+        components={{
+          code({ node, className, children, ...props }) {
+            const match = /language-(\w+)/.exec(className || '');
+            return match ? (
+              <SyntaxHighlighter
+                children={String(children).replace(/\n$/, '')}
+                language={match[1]}
+                style={oneLight}
+                {...props}
+              />
+            ) : (
+              <code className={className} {...props}>
+                {children}
+              </code>
+            );
+          },
+        }}
+      >
+        {data}
+      </Markdown>
     </div>
   );
 };

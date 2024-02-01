@@ -2,6 +2,7 @@ import { Flex, Stack } from '@green-intelligence/ui';
 import { escapeItalicTag } from '../utils';
 import { cookies } from 'next/headers';
 import { Extension } from './Extension';
+// import { redirect } from 'next/navigation';
 
 export default async function DashboardPage() {
   const cookieStore = cookies();
@@ -13,15 +14,15 @@ export default async function DashboardPage() {
   const res = await data.json();
 
   return (
-    <Stack className="gap-10 grow justify-center items-center">
-      <Flex className="justify-center items-center rounded-lg shadow-lg w-96 h-96 bg-emerald-100">
+    <Stack className="gap-10 grow items-center pt-10">
+      <Flex className="justify-center items-center rounded-lg shadow-lg w-96 h-20 bg-emerald-50">
         <div
           dangerouslySetInnerHTML={{ __html: escapeItalicTag(res.result) }}
         />
       </Flex>
-      <Stack className="rounded-lg shadow-lg max-w-7xl bg-emerald-100">
+      <div className="rounded-lg w-[1000px]">
         <Extension ticket={ticket?.value} />
-      </Stack>
+      </div>
     </Stack>
   );
 }
